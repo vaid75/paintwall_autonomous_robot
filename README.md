@@ -1,6 +1,6 @@
 # 🤖 Autonomous Wall-Finishing Robot Control System
 
-DEMO VIDEO LINK:- https://drive.google.com/file/d/19l7u9tuDmNyxg7cfr3-B1Oadx7LT8Dcm/view?usp=sharing
+
 
 A robust, intelligent control system for autonomous wall-finishing robots with advanced path planning, obstacle avoidance, and real-time visualization capabilities.
 
