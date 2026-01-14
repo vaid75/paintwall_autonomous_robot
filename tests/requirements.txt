@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+pydantic
+pytest
+httpx
+databases==0.6.1       # optional if you want async sqlite wrapper (we'll use sqlite3 for simplicity)

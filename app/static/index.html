@@ -1,0 +1,293 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Autonomous Wall-Finishing Robot Control System</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      padding: 20px; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      font-weight: 300;
+    }
+    
+    .header p {
+      margin: 10px 0 0 0;
+      opacity: 0.8;
+      font-size: 1.1em;
+    }
+    
+    .content {
+      padding: 30px;
+    }
+    
+    .input-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+    
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .input-group label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+    
+    .input-group input {
+      padding: 10px;
+      border: 2px solid #e9ecef;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .obstacles-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: #fff3cd;
+      border-radius: 10px;
+      border-left: 4px solid #ffc107;
+    }
+    
+    .obstacle-item {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .obstacle-item input {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .remove-obstacle {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .add-obstacle {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    
+    #canvas { 
+      border: 2px solid #dee2e6; 
+      background: #f8f9fa;
+      border-radius: 10px;
+      display: block;
+      margin: 20px auto;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+    
+    .btn-primary {
+      background: #007bff;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+    }
+    
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background: #1e7e34;
+      transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+      background: #ffc107;
+      color: #212529;
+    }
+    
+    .btn-warning:hover {
+      background: #e0a800;
+      transform: translateY(-2px);
+    }
+    
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background: #c82333;
+      transform: translateY(-2px);
+    }
+    
+    #status {
+      text-align: center;
+      padding: 15px;
+      background: #e9ecef;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: 600;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .stat-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      border-left: 4px solid #007bff;
+    }
+    
+    .stat-card h3 {
+      margin: 0 0 5px 0;
+      color: #2c3e50;
+    }
+    
+    .stat-card p {
+      margin: 0;
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🤖 Autonomous Wall-Finishing Robot</h1>
+      <p>Intelligent Path Planning & Coverage Optimization System</p>
+    </div>
+    
+    <div class="content">
+      <div class="input-section">
+        <div class="input-group">
+          <label>Wall Width (m)</label>
+          <input id="w" value="5" type="number" step="0.1" min="0.1" />
+        </div>
+        <div class="input-group">
+          <label>Wall Height (m)</label>
+          <input id="h" value="5" type="number" step="0.1" min="0.1" />
+        </div>
+        <div class="input-group">
+          <label>Step Size (m)</label>
+          <input id="step" value="0.1" type="number" step="0.01" min="0.01" />
+        </div>
+        <div class="input-group">
+          <button id="generateBtn" class="btn btn-primary">🚀 Generate Path</button>
+        </div>
+      </div>
+      
+      <div class="obstacles-section">
+        <h3>🏗️ Obstacles (Windows, Doors, etc.)</h3>
+        <div id="obstacles-container">
+          <!-- Obstacles will be added here dynamically -->
+        </div>
+        <button id="add-obstacle" class="add-obstacle">+ Add Obstacle</button>
+      </div>
+      
+      <canvas id="canvas" width="800" height="600"></canvas>
+      
+      <div class="controls">
+        <button id="play" class="btn btn-success">▶️ Play</button>
+        <button id="pause" class="btn btn-warning">⏸️ Pause</button>
+        <button id="reset" class="btn btn-danger">🔄 Reset</button>
+      </div>
+      
+      <div id="status">Ready to generate path</div>
+      
+      <div class="stats" id="stats" style="display: none;">
+        <div class="stat-card">
+          <h3>Path Length</h3>
+          <p id="path-length">-</p>
+        </div>
+        <div class="stat-card">
+          <h3>Coverage</h3>
+          <p id="coverage">-</p>
+        </div>
+        <div class="stat-card">
+          <h3>Processing Time</h3>
+          <p id="processing-time">-</p>
+        </div>
+        <div class="stat-card">
+          <h3>Efficiency</h3>
+          <p id="efficiency">-</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
